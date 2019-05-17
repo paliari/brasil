@@ -1,0 +1,34 @@
+{
+    "name": "paliari/brasil",
+    "description": "Utilidades para brasil.",
+    "keywords": [
+        "php",
+        "brasil",
+        "brazil",
+        "cpnj",
+        "cpf",
+        "uf",
+        "estado"
+    ],
+    "homepage": "https://github.com/sinergia/brasil",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Marcos",
+            "email": "marcos@paliari.com.br",
+            "homepage": "https://www.paliari.com.br"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Paliari\\Brasil\\": "src"
+        }
+    },
+    "require": {
+        "paliari/php-date-time": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.1"
+    }
+}
