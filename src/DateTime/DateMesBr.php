@@ -4,6 +4,11 @@ namespace Paliari\Brasil\DateTime;
 
 class DateMesBr extends DateTimeBr
 {
+    protected function init()
+    {
+        $this->setDay(1);
+    }
+
     /**
      * @return string
      */
