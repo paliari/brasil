@@ -10,7 +10,7 @@
         "uf",
         "estado"
     ],
-    "homepage": "https://github.com/sinergia/brasil",
+    "homepage": "https://github.com/paliari/brasil",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -26,7 +26,8 @@
         }
     },
     "require": {
-        "paliari/php-date-time": "^1.0"
+        "paliari/php-date-time": "^1.0",
+        "php": "^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.1"

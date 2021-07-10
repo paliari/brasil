@@ -43,9 +43,7 @@ class DateTimeBr extends TDateTime
      */
     public function __toString()
     {
-        $format = ($this->hour || $this->minute || $this->second) ? 'd/m/Y H:i:s' : 'd/m/Y';
-
-        return $this->format($format);
+        return $this->format('d/m/Y H:i:s');
     }
 
     /**

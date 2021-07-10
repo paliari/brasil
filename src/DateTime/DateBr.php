@@ -2,16 +2,10 @@
 
 namespace Paliari\Brasil\DateTime;
 
-/**
- * Class DateBr
- * @package Paliari\Brasil\DateTime
- */
 class DateBr extends DateTimeBr
 {
-
-    protected function init()
+    public function __toString()
     {
-        $this->setHour(0)->setMinute(0)->setSecond(0);
+        return $this->format('d/m/Y');
     }
-
 }

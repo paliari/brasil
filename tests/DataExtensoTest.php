@@ -106,8 +106,8 @@ class DataExtensoTest extends \PHPUnit\Framework\TestCase
      */
     public function testDiaMesAnoHoraDateBr()
     {
-        $this->assertEquals('25 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::DIA_MES_ANO_HORA, new DateBr('2013-10-25 11:30:01')));
-        $this->assertEquals('25 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::DIA_MES_ANO_HORA, new DateBr('10/25/2013 11:30:01')));
+        $this->assertEquals('25 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::DIA_MES_ANO_HORA, new DateBr('2013-10-25')));
+        $this->assertEquals('25 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::DIA_MES_ANO_HORA, new DateBr('10/25/2013')));
     }
 
     /**
@@ -115,9 +115,9 @@ class DataExtensoTest extends \PHPUnit\Framework\TestCase
      */
     public function testSemanaDiaMesAnoHoraDateBr()
     {
-        $this->assertEquals('sexta-feira, 25 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::SEMANA_DIA_MES_ANO_HORA, new DateBr('2013-10-25 11:30:01')));
-        $this->assertEquals('quarta-feira, 23 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::SEMANA_DIA_MES_ANO_HORA, new DateBr('2013-10-23 11:30:01')));
-        $this->assertEquals('sexta-feira, 25 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::SEMANA_DIA_MES_ANO_HORA, new DateBr('10/25/2013 11:30:01')));
+        $this->assertEquals('sexta-feira, 25 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::SEMANA_DIA_MES_ANO_HORA, new DateBr('2013-10-25')));
+        $this->assertEquals('quarta-feira, 23 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::SEMANA_DIA_MES_ANO_HORA, new DateBr('2013-10-23')));
+        $this->assertEquals('sexta-feira, 25 de outubro de 2013 as 00:00:00', DataExtenso::formatar(DataExtenso::SEMANA_DIA_MES_ANO_HORA, new DateBr('10/25/2013')));
     }
 
     /**
