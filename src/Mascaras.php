@@ -34,13 +34,13 @@ class Mascaras
     /**
      * Retorna CPF ou CNPJ formatado
      *
-     * @param $str
+     * @param string $str
      *
      * @return string
      */
     public static function formataCPFCNPJ($str)
     {
-        $str = preg_replace('![^\d]!', '', $str);
+        $str = preg_replace('![^\d]!', '', (string)$str);
         if (11 == strlen($str) || 14 > strlen($str)) {
             $str = CPF::formatar($str);
         } elseif (14 <= strlen($str)) {
@@ -120,13 +120,13 @@ class Mascaras
     /**
      * Retorna o telefone no formato correto
      *
-     * @param $str
+     * @param string $str
      *
      * @return string
      */
     public static function formataFone($str)
     {
-        $str = preg_replace("/[^0-9]/", '', $str);
+        $str = preg_replace("/[^0-9]/", '', (string)$str);
         if (!$str) {
             return '';
         }
