@@ -12,19 +12,19 @@ class CNPJ
     /**
      * Retorna apenas os dígitos do CNPJ
      *
-     * @param $cnpj
+     * @param string $cnpj
      *
      * @return string
      */
     public static function digitos($cnpj)
     {
-        return substr(preg_replace('![^\d]!', '', $cnpj), 0, 14);
+        return substr(preg_replace('![^\d]!', '', (string)$cnpj), 0, 14);
     }
 
     /**
      * Retorna o cnpj formatado como: 92.122.313/0001-30
      *
-     * @param $cnpj
+     * @param string $cnpj
      *
      * @return string
      */
@@ -46,7 +46,7 @@ class CNPJ
     /**
      * Retorna os dígitos verificadores (2 últimos dígitos)
      *
-     * @param $cnpj
+     * @param string $cnpj
      *
      * @return string
      */
@@ -60,19 +60,19 @@ class CNPJ
     /**
      * Verifica se o CNPJ está no formato: 00.000.000/0000-00
      *
-     * @param $cnpj
+     * @param string $cnpj
      *
      * @return bool
      */
     public static function validarFormato($cnpj)
     {
-        return preg_match('!\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}!', $cnpj) === 1;
+        return preg_match('!\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}!', (string)$cnpj) === 1;
     }
 
     /**
      * Verifica se o dígito verificador está correto e se o CNPJ é válido.
      *
-     * @param $cnpj
+     * @param string $cnpj
      *
      * @return bool
      */

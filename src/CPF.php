@@ -12,13 +12,13 @@ class CPF
     /**
      * Retorna apenas os dígitos do cpf
      *
-     * @param $cpf
+     * @param string $cpf
      *
      * @return string
      */
     public static function digitos($cpf)
     {
-        return substr(preg_replace('![^\d]!', '', $cpf), 0, 11);
+        return substr(preg_replace('![^\d]!', '', (string)$cpf), 0, 11);
     }
 
     /**
@@ -43,7 +43,7 @@ class CPF
     /**
      * Retorna os últimos 2 dígitos verificadores
      *
-     * @param $cpf
+     * @param string $cpf
      *
      * @return string
      */
@@ -57,19 +57,19 @@ class CPF
     /**
      * Verifica se o cpf está no formato: 999.999.999-99
      *
-     * @param $cpf
+     * @param string $cpf
      *
      * @return bool
      */
     public static function validarFormato($cpf)
     {
-        return preg_match('!\d{3}\.\d{3}\.\d{3}\-\d{2}!', $cpf) === 1;
+        return preg_match('!\d{3}\.\d{3}\.\d{3}\-\d{2}!', (string)$cpf) === 1;
     }
 
     /**
      * Verifica se o dígito verificador está correto
      *
-     * @param $cpf
+     * @param string $cpf
      *
      * @return bool
      */
