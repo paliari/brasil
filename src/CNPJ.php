@@ -34,10 +34,10 @@ class CNPJ
         if (strlen($cnpj) != 14) {
             return "";
         }
-        $partes[]    = substr($cnpj, 0, 2);
-        $partes[]    = substr($cnpj, 2, 3);
-        $partes[]    = substr($cnpj, 5, 3);
-        $filiais     = substr($cnpj, 8, 4);
+        $partes[] = substr($cnpj, 0, 2);
+        $partes[] = substr($cnpj, 2, 3);
+        $partes[] = substr($cnpj, 5, 3);
+        $filiais = substr($cnpj, 8, 4);
         $verificador = substr($cnpj, 12);
 
         return implode(".", $partes) . '/' . $filiais . '-' . $verificador;
@@ -79,19 +79,16 @@ class CNPJ
     public static function validar($cnpj)
     {
         $cnpj = static::digitos($cnpj);
-
         if (strlen($cnpj) <> 14) {
             return false;
         }
-
         $regex = "/^0+$|^1+$|^2+$|^3+$|^4+$|^5+$|^6+$|^7+$|^8+$|^9+$/";
         if (preg_match($regex, $cnpj)) {
             return false;
         }
-
         // Primeiro dígito
-        $multiplicadores = array (5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
-        $soma            = 0;
+        $multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        $soma = 0;
         for ($i = 0; $i <= 11; $i++) {
             $soma += $multiplicadores[$i] * $cnpj[$i];
         }
@@ -99,10 +96,9 @@ class CNPJ
         if ($d1 >= 10) {
             $d1 = 0;
         }
-
         // Segundo dígito
-        $multiplicadores = array (6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
-        $soma            = 0;
+        $multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        $soma = 0;
         for ($i = 0; $i <= 12; $i++) {
             $soma += $multiplicadores[$i] * $cnpj[$i];
         }
@@ -120,18 +116,17 @@ class CNPJ
      */
     public static function gerar()
     {
-        $cnpj = array ();
+        $cnpj = [];
         for ($i = 0; $i < 8; $i++) {
             $cnpj[$i] = rand(0, 9);
         }
-        $cnpj[8]  = 0;
-        $cnpj[9]  = 0;
+        $cnpj[8] = 0;
+        $cnpj[9] = 0;
         $cnpj[10] = 0;
         $cnpj[11] = 1;
-
         // Primeiro dígito
-        $multiplicadores = array (5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
-        $soma            = 0;
+        $multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        $soma = 0;
         for ($i = 0; $i <= 11; $i++) {
             $soma += $multiplicadores[$i] * $cnpj[$i];
         }
@@ -140,10 +135,9 @@ class CNPJ
             $d1 = 0;
         }
         $cnpj[12] = $d1;
-
         // Segundo dígito
-        $multiplicadores = array (6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
-        $soma            = 0;
+        $multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        $soma = 0;
         for ($i = 0; $i <= 12; $i++) {
             $soma += $multiplicadores[$i] * $cnpj[$i];
         }

@@ -34,7 +34,7 @@ class CPF
         if (strlen($cpf) != 11) {
             return "";
         }
-        $partes      = str_split($cpf, 3);
+        $partes = str_split($cpf, 3);
         $verificador = array_pop($partes);
 
         return implode(".", $partes) . '-' . $verificador;
@@ -76,16 +76,13 @@ class CPF
     public static function validar($cpf)
     {
         $cpf = static::digitos($cpf);
-
         if (strlen($cpf) <> 11) {
             return false;
         }
-
         $regex = "/^0+$|^1+$|^2+$|^3+$|^4+$|^5+$|^6+$|^7+$|^8+$|^9+$/";
         if (preg_match($regex, $cpf)) {
             return false;
         }
-
         // Primeiro dígito
         $soma = 0;
         for ($i = 0; $i < 9; $i++) {
@@ -95,7 +92,6 @@ class CPF
         if ($d1 >= 10) {
             $d1 = 0;
         }
-
         // Segundo Dígito
         $soma = 0;
         for ($i = 0; $i < 10; $i++) {
@@ -105,6 +101,7 @@ class CPF
         if ($d2 >= 10) {
             $d2 = 0;
         }
+
         return $d1 == $cpf[9] && $d2 == $cpf[10];
     }
 
@@ -114,11 +111,10 @@ class CPF
      */
     public static function gerar()
     {
-        $cpf = array ();
+        $cpf = [];
         for ($i = 0; $i < 9; $i++) {
             $cpf[$i] = rand(0, 9);
         }
-
         // Primeiro dígito
         $soma = 0;
         for ($i = 0; $i < 9; $i++) {
@@ -129,7 +125,6 @@ class CPF
             $d1 = 0;
         }
         $cpf[9] = $d1;
-
         // Segundo Dígito
         $soma = 0;
         for ($i = 0; $i < 10; $i++) {

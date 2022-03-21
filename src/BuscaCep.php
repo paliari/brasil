@@ -8,12 +8,11 @@ namespace Paliari\Brasil;
  */
 class BuscaCep
 {
-
     /**
-     * 	Função de busca de Endereço pelo CEP
-     *	-	Desenvolvido Felipe Olivaes para ajaxbox.com.br
-     *	-	Utilizando WebService de CEP da republicavirtual.com.br
-     * @param  string $cep
+     *    Função de busca de Endereço pelo CEP
+     *    -    Desenvolvido Felipe Olivaes para ajaxbox.com.br
+     *    -    Utilizando WebService de CEP da republicavirtual.com.br
+     * @param string $cep
      * @return array  $retorno
      */
     public static function getEndereco($cep)
@@ -27,5 +26,4 @@ class BuscaCep
 
         return $ret;
     }
-
 }
