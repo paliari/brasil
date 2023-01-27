@@ -41,7 +41,7 @@ class ValorExtensoTest extends \PHPUnit\Framework\TestCase
     public function testUpper()
     {
         for ($i = 1; $i < 50; $i++) {
-            $this->assertTrue(ctype_upper(substr(ValorExtenso::valorExtenso(rand(0.1, 9999999), true),0,1)));
+            $this->assertTrue(ctype_upper(substr(ValorExtenso::valorExtenso(rand(1, 9999999)/100, true),0,1)));
         }
     }
 
@@ -51,7 +51,7 @@ class ValorExtensoTest extends \PHPUnit\Framework\TestCase
     public function testLower()
     {
         for ($i = 1; $i < 50; $i++) {
-            $this->assertTrue(ctype_lower(substr(ValorExtenso::valorExtenso(rand(0.1, 9999999)),0,1)));
+            $this->assertTrue(ctype_lower(substr(ValorExtenso::valorExtenso(rand(1, 9999999)/100),0,1)));
         }
     }
 

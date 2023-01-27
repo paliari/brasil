@@ -62,6 +62,6 @@ class DateTimeBr extends TDateTime
 
     public function toJSON(): string
     {
-        return $this->format(DATE_ISO8601);
+        return $this->format(DATE_ATOM);
     }
 }
