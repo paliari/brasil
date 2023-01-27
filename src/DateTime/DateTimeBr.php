@@ -23,6 +23,7 @@ class DateTimeBr extends TDateTime
                 return "$ano-$mes-$dia" . ($hora | $min | $seg ? "$hora:$min:$seg" : "");
             }
         }
+
         return null;
     }
 
@@ -34,7 +35,8 @@ class DateTimeBr extends TDateTime
     protected static function prepareDate($date)
     {
         $dateBr = static::strBrToUs($date);
-        return $dateBr ?: parent::prepareDate($date) ;
+
+        return $dateBr ?: parent::prepareDate($date);
     }
 
     /**
@@ -56,5 +58,10 @@ class DateTimeBr extends TDateTime
     public function dataExtenso($param = 1)
     {
         return DataExtenso::formatar($param, $this->getTimestamp());
+    }
+
+    public function toJSON(): string
+    {
+        return $this->format(DATE_ATOM);
     }
 }
