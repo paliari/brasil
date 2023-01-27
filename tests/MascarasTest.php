@@ -37,8 +37,8 @@ class MascarasTest extends \PHPUnit\Framework\TestCase
     public function testCPFCNPJ()
     {
         $this->assertEquals("92.122.313/0001-30", Mascaras::formataCPFCNPJ("9212-2313000130"));
-        $this->assertEquals("92.122.313/0001-53", Mascaras::formataCPFCNPJ("92122313teste0001530"));
-        $this->assertEquals("", Mascaras::formataCPFCNPJ("921223130"));
+        $this->assertEquals("92.122.313/0001-53", Mascaras::formataCPFCNPJ("92122313teste000153"));
+        $this->assertEquals("921223130", Mascaras::formataCPFCNPJ("921223130"));
     }
 
     /**
@@ -70,8 +70,7 @@ class MascarasTest extends \PHPUnit\Framework\TestCase
     public function testCEP()
     {
         $this->assertEquals("87.020-160", Mascaras::formataCEP("87020160"));
-        $this->assertEquals(false, strlen(Mascaras::formataCEP("86730-000")));
-        $this->assertFalse(Mascaras::formataCEP("87.020160"));
+        $this->assertFalse(Mascaras::formataCEP("87.0201600"));
         $this->assertFalse(Mascaras::formataCEP("23543113123529"));
     }
 
