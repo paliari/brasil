@@ -18,7 +18,7 @@ class CPF
      */
     public static function digitos($cpf)
     {
-        return substr(preg_replace('![^\d]!', '', (string)$cpf), 0, 11);
+        return substr(preg_replace('!\D!', '', (string)$cpf), 0, 11);
     }
 
     /**

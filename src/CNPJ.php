@@ -18,7 +18,7 @@ class CNPJ
      */
     public static function digitos($cnpj)
     {
-        return substr(preg_replace('![^\d]!', '', (string)$cnpj), 0, 14);
+        return substr(preg_replace('!\D!', '', (string)$cnpj), 0, 14);
     }
 
     /**

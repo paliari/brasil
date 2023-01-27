@@ -37,7 +37,7 @@ class Mascaras
      */
     public static function formataCPFCNPJ($str)
     {
-        $str = preg_replace('![^\d]!', '', (string)$str);
+        $str = preg_replace('!\D!', '', (string)$str);
         $len = strlen($str);
         if (11 === $len) {
             $str = CPF::formatar($str);
@@ -92,8 +92,8 @@ class Mascaras
      */
     public static function formataCEP($cep)
     {
-        $cep = preg_replace('![^\d]!', '', (string)$cep);
-        if (8 == strlen($cep)) {
+        $cep = preg_replace('!\D!', '', (string)$cep);
+        if (8 === strlen($cep)) {
             $ret = substr($cep, 0, 2)
                 . '.' . substr($cep, 2, 3)
                 . '-' . substr($cep, 5, 3);
@@ -129,11 +129,11 @@ class Mascaras
      */
     public static function formataFone($str)
     {
-        $str = preg_replace("/[^0-9]/", '', (string)$str);
+        $str = preg_replace("/\D/", '', (string)$str);
         if (!$str) {
             return '';
         }
-        if ('0800' == substr($str, 0, 4)) {
+        if (str_starts_with($str, '0800')) {
             $srt = substr($str, -11, -7) . ' ' . substr($str, -7, -4) . '-' . substr($str, -4);
         } elseif (11 == strlen($str)) {
             $srt = '(' . substr($str, -11, -9) . ') ' . substr($str, -9, -4) . '-' . substr($str, -4);
