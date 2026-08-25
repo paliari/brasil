@@ -18,7 +18,8 @@ class CNPJ
      */
     public static function digitos($cnpj)
     {
-        return substr(preg_replace('!\D!', '', (string)$cnpj), 0, 14);
+        // 1. Remove qualquer caractere que não seja letra ou número e força maiúsculas
+        return strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string)$cnpj));
     }
 
     /**
@@ -79,35 +80,59 @@ class CNPJ
     public static function validar($cnpj)
     {
         $cnpj = static::digitos($cnpj);
-        if (strlen($cnpj) <> 14) {
+        // Remove caracteres não alfanuméricos (pontos, barras, traços)
+        $cnpj = strtoupper(preg_replace('/[^A-Z0-9]/', '', $cnpj));
+
+        // Verifica se tem 14 caracteres
+        if (strlen($cnpj) !== 14) {
             return false;
         }
-        $regex = "/^0+$|^1+$|^2+$|^3+$|^4+$|^5+$|^6+$|^7+$|^8+$|^9+$/";
-        if (preg_match($regex, $cnpj)) {
+        // 3. Impede sequências idênticas conhecidas (ex: "00000000000000", "11111111111111", etc.)
+        if (preg_match('/^([A-Z0-9])\1{13}$/', $cnpj)) {
             return false;
-        }
-        // Primeiro dígito
-        $multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-        $soma = 0;
-        for ($i = 0; $i <= 11; $i++) {
-            $soma += $multiplicadores[$i] * $cnpj[$i];
-        }
-        $d1 = 11 - ($soma % 11);
-        if ($d1 >= 10) {
-            $d1 = 0;
-        }
-        // Segundo dígito
-        $multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-        $soma = 0;
-        for ($i = 0; $i <= 12; $i++) {
-            $soma += $multiplicadores[$i] * $cnpj[$i];
-        }
-        $d2 = 11 - ($soma % 11);
-        if ($d2 >= 10) {
-            $d2 = 0;
         }
 
-        return $d1 == $cnpj[12] && $d2 == $cnpj[13];
+        // Valida 1º dígito verificador
+        $soma = 0;
+        $peso = 5;
+        for ($i = 0; $i < 12; $i++) {
+            $valor = static::converteCaractere($cnpj[$i]);
+            $soma += $valor * $peso;
+            $peso = ($peso == 2) ? 9 : $peso - 1;
+        }
+        $resto = $soma % 11;
+        $digito1 = ($resto < 2) ? 0 : 11 - $resto;
+
+        if ((int)$cnpj[12] !== $digito1) {
+            return false;
+        }
+
+        // Valida 2º dígito verificador
+        $soma = 0;
+        $peso = 6;
+        for ($i = 0; $i < 13; $i++) {
+            $valor = static::converteCaractere($cnpj[$i]);
+            $soma += $valor * $peso;
+            $peso = ($peso == 2) ? 9 : $peso - 1;
+        }
+        $resto = $soma % 11;
+        $digito2 = ($resto < 2) ? 0 : 11 - $resto;
+
+        return (int)$cnpj[13] === $digito2;
+    }
+
+    /**
+     * Função auxiliar para converter caractere (número ou letra) em valor numérico
+     *
+     * @param string $char
+     * @return int
+     */
+    public static function converteCaractere($char)
+    {
+        $code = ord($char);
+        // Se for número ('0'-'9' -> ASCII 48-57), subtrai 48
+        // Se for letra ('A'-'Z' -> ASCII 65-90), subtrai 48 também (A = 65 - 48 = 17)
+        return $code - 48;
     }
 
     /**
