@@ -89,4 +89,15 @@ class DateBrTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(-7, $date1->intervalDays(new DateBr('2013-08-25')));
         $this->assertEquals(30, $date2->intervalDays(new DateBr('2013-12-1')));
     }
+
+    /**
+     * Verifica que intervalDays retorna inteiro, com sinal.
+     */
+    public function testIntervaloDiasInteiro()
+    {
+        $date = new DateBr('01/10/2026');
+        $this->assertSame(30, $date->intervalDays(new DateBr('31/10/2026')));
+        $this->assertSame(-7, $date->intervalDays(new DateBr('24/09/2026')));
+        $this->assertSame(0, $date->intervalDays(new DateBr('01/10/2026')));
+    }
 }

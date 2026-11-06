@@ -155,6 +155,18 @@ class DateTimeBrTest extends \PHPUnit\Framework\TestCase
         DateTimeBr::createDate('nogsgsw');
     }
 
+    /**
+     * Verifica que toJSON e json_encode usam DATE_ATOM.
+     */
+    public function testJson()
+    {
+        $date = new DateTimeBr('25/12/2026 14:30:00');
+        $this->assertSame($date->format(DATE_ATOM), $date->toJSON());
+        $this->assertStringStartsWith('2026-12-25T14:30:00', $date->toJSON());
+        $this->assertSame(json_encode($date->format(DATE_ATOM)), json_encode($date));
+        $this->assertSame(json_encode(['d' => $date->format(DATE_ATOM)]), json_encode(['d' => $date]));
+    }
+
     public function testExtenso()
     {
         $date = new DateTimeBr('2013-11-08 22:15:03');
