@@ -8,7 +8,10 @@ alwaysApply: false
 
 ## Hierarquia
 
-`Carbon` → `Paliari\DateTime\TDateTime` (vendor) → `DateTimeBr` → `DateBr` / `DateMesBr`.
+`Carbon` 3 → `Paliari\DateTime\TDateTime` (vendor, `php-date-time` 3) → `DateTimeBr` → `DateBr` / `DateMesBr`.
+
+- No Carbon 3, `diffIn*` retorna float e com sinal; para diferença em dias use `intervalDays()` (int, com sinal).
+- Sobrescritas precisam ser compatíveis com as assinaturas do Carbon 3 (ex.: `toJSON(): string` é covariante com `?string`).
 
 - Use a API do Carbon/`TDateTime` (`addDays`, `subDays`, `intervalDays`, `createDate`, `createFromDate`) em vez de reimplementar cálculos com `mktime`.
 - Sobrescrever `prepareDate()` / `init()` (hooks do `TDateTime`) para adaptar entrada; não sobrescrever o construtor.

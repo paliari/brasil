@@ -12,8 +12,8 @@ brasileiras: CPF, CNPJ (incluindo alfanumérico), UF, máscaras, valor por exten
 
 - PHP `^8.2` (testado no 8.5). Recursos do 8.1/8.2 são permitidos em código novo, sem mudar assinaturas públicas existentes.
 - Autoload PSR-4: `Paliari\Brasil\` → `src/`.
-- Dependência: `paliari/php-date-time ^2.0` (`TDateTime`, que estende Carbon 2.73). Não exigir `nesbot/carbon` diretamente.
-- O brasil 3.x é Carbon 2; Carbon 3 (`php-date-time ^3.0`) fica reservado para o 4.0.
+- Dependência: `paliari/php-date-time ^3.0` (`TDateTime`, que estende Carbon 3). Não exigir `nesbot/carbon` diretamente.
+- Branches: `master` é a 4.x (Carbon 3); `3.x` é manutenção com Carbon 2 (`php-date-time ^2.0`), para versões `3.1.x`. Correção que valha para as duas linhas deve ir para ambos os branches.
 - Testes: PHPUnit 11.5 (`require-dev`).
 
 ## Estrutura

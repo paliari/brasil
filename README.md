@@ -7,12 +7,37 @@ dias úteis e feriados nacionais, UFs, meses e dias da semana.
 ## Requisitos
 
 - PHP 8.2 ou superior (testado até o 8.5)
+- Carbon 3, via [`paliari/php-date-time`](https://github.com/paliari/php-date-time) 3
 
 ## Instalação
 
 ```bash
 composer require paliari/brasil
 ```
+
+| Versão do brasil | Carbon | paliari/php-date-time | PHP |
+|---|---|---|---|
+| 4.x | 3 | ^3.0 | ^8.2 |
+| 3.1 (branch `3.x`) | 2 | ^2.0 | ^8.2 |
+
+Projetos que ainda usam Carbon 2 devem instalar `composer require paliari/brasil:^3.1`.
+
+## Atualizando da 3.x para a 4.0
+
+A API do `brasil` (CPF, CNPJ, máscaras, `DiaUtil`, `DataExtenso` etc.) não mudou, e as
+saídas de `DateBr`, `DateTimeBr` e `DateMesBr` (`__toString`, `toJSON`, `dataExtenso`)
+continuam as mesmas.
+
+A quebra vem do Carbon: `DateBr`, `DateTimeBr` e `DateMesBr` passam a ser objetos
+**Carbon 3**. Se você chama métodos do Carbon nesses objetos, revise principalmente:
+
+- `diffIn*` retorna `float` e com sinal por padrão (ex.: `diffInDays` de uma data futura para
+  uma passada é negativo). Para dias inteiros, prefira `intervalDays()`, que retorna `int`.
+- `createFromTimestamp` usa UTC por padrão.
+- Métodos de criação e setters ficam mais estritos com valores inválidos.
+
+Seu projeto também precisa aceitar Carbon 3. Veja o
+[guia de migração do Carbon 3](https://carbon.nesbot.com/guide/getting-started/migration.html#migrate-to-carbon-3).
 
 ## CPF
 
@@ -88,7 +113,7 @@ Parâmetros: `($valor, $maiusculas = false, $moeda = 'R', $sexo = 'M')`.
 ## Datas
 
 `DateTimeBr`, `DateBr` e `DateMesBr` estendem
-[`paliari/php-date-time`](https://github.com/paliari/php-date-time) (baseado no Carbon)
+[`paliari/php-date-time`](https://github.com/paliari/php-date-time) (baseado no Carbon 3)
 e aceitam data no formato brasileiro, universal ou timestamp.
 
 ```php
