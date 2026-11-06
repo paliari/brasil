@@ -49,5 +49,8 @@ public static function formatar($cpf)
 ## Evitar
 
 - Supressão `@` em código novo (existe em legado; não propagar).
+- Casts não canônicos `(double)`, `(integer)`, `(boolean)`, `(binary)` (depreciados no PHP 8.5): use `(float)`, `(int)`, `(bool)`, `(string)`.
+- `utf8_encode`/`utf8_decode` (depreciados): use `mb_convert_encoding($s, 'ISO-8859-1', 'UTF-8')` e vice-versa.
+- `src/Acentos.php` é salvo em ISO-8859-1 (as regex dependem disso); não converter o arquivo para UTF-8.
 - Comentários numerados de passo a passo ("// 1. ...", "// 3. ...") — o código deve se explicar.
 - Chamadas de rede fora de `BuscaCep`.

@@ -4,27 +4,35 @@ globs: tests/**/*.php
 alwaysApply: false
 ---
 
-# Testes (PHPUnit 8.5)
+# Testes (PHPUnit 11.5)
 
 - Um arquivo `tests/<Classe>Test.php` por classe de `src/`, sem namespace, estendendo `\PHPUnit\Framework\TestCase`.
 - Importar a classe testada com `use` no topo.
 - Métodos `public function testAlgumaCoisa()` com docblock curto em português descrevendo o cenário.
-- Compatível com PHPUnit 8: sem atributos `#[Test]`/`#[DataProvider]`; use anotações (`@group`, `@dataProvider`).
-- Testes que varrem anos de datas ou muitos valores levam `@group slow`.
+- Metadados só com atributos (`#[Group]`, `#[DataProvider]`); anotações em docblock (`@group`, `@dataProvider`) geram depreciação e quebram a suíte.
+- Data providers são `public static function`.
+- Testes que varrem anos de datas ou muitos valores levam `#[Group('slow')]`.
 
 ```php
 <?php
 
 use Paliari\Brasil\CPF;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CPFTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * Retorna vazio quando o CPF tem menos de 11 dígitos.
+     * Retorna vazio quando o CPF não tem 11 dígitos.
      */
-    public function testFormatarInvalido()
+    #[DataProvider('invalidosProvider')]
+    public function testFormatarInvalido($cpf)
     {
-        $this->assertEquals("", CPF::formatar("123"));
+        $this->assertEquals("", CPF::formatar($cpf));
+    }
+
+    public static function invalidosProvider()
+    {
+        return [['123'], ['']];
     }
 }
 ```

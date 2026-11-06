@@ -6,7 +6,7 @@ dias úteis e feriados nacionais, UFs, meses e dias da semana.
 
 ## Requisitos
 
-- PHP 8.0+
+- PHP 8.2 ou superior (testado até o 8.5)
 
 ## Instalação
 
