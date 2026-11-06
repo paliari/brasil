@@ -5,14 +5,15 @@ use Paliari\Brasil\Mascaras;
 class MascarasTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * Testa o retorno do CNPJ no formato 00.000.000/0000-00
-     * Caso o CNPJ informado tenha menos de 14 dígitos retorna vazio,
-     * caso maior retorna os 14 primeiro dígitos formatados
+     * Testa o retorno do CNPJ no formato XX.XXX.XXX/XXXX-99
+     * Caso o CNPJ informado tenha menos de 14 caracteres ou DV não numérico retorna vazio,
+     * caso maior retorna os 14 primeiros caracteres formatados
      */
     public function testCNPJ()
     {
         $this->assertEquals("92.122.313/0001-30", Mascaras::formataCNPJ("9212-2313000130"));
-        $this->assertEquals("92.122.313/0001-53", Mascaras::formataCNPJ("92122313teste0001530"));
+        $this->assertEquals("12.ABC.345/01DE-35", Mascaras::formataCNPJ("12abc34501de35"));
+        $this->assertEquals("", Mascaras::formataCNPJ("92122313teste0001530"));
         $this->assertEquals("", Mascaras::formataCNPJ("921223130"));
     }
 
@@ -37,7 +38,9 @@ class MascarasTest extends \PHPUnit\Framework\TestCase
     public function testCPFCNPJ()
     {
         $this->assertEquals("92.122.313/0001-30", Mascaras::formataCPFCNPJ("9212-2313000130"));
-        $this->assertEquals("92.122.313/0001-53", Mascaras::formataCPFCNPJ("92122313teste000153"));
+        $this->assertEquals("12.ABC.345/01DE-35", Mascaras::formataCPFCNPJ("12ABC34501DE35"));
+        $this->assertEquals("123.456.789-01", Mascaras::formataCPFCNPJ("123.456.789-01"));
+        $this->assertEquals("92122313TESTE000153", Mascaras::formataCPFCNPJ("92122313teste000153"));
         $this->assertEquals("921223130", Mascaras::formataCPFCNPJ("921223130"));
     }
 

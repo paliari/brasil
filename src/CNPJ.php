@@ -10,7 +10,7 @@ namespace Paliari\Brasil;
 class CNPJ
 {
     /**
-     * Retorna apenas os dígitos do CNPJ
+     * Retorna apenas os caracteres alfanuméricos do CNPJ, em maiúsculas, limitado a 14
      *
      * @param string $cnpj
      *
@@ -18,12 +18,11 @@ class CNPJ
      */
     public static function digitos($cnpj)
     {
-        // 1. Remove qualquer caractere que não seja letra ou número e força maiúsculas
-        return strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string)$cnpj));
+        return substr(strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string)$cnpj)), 0, 14);
     }
 
     /**
-     * Retorna o cnpj formatado como: 92.122.313/0001-30
+     * Retorna o cnpj formatado como: 92.122.313/0001-30 ou 12.ABC.345/01DE-35
      *
      * @param string $cnpj
      *
@@ -32,7 +31,7 @@ class CNPJ
     public static function formatar($cnpj)
     {
         $cnpj = static::digitos($cnpj);
-        if (strlen($cnpj) != 14) {
+        if (!static::dvNumerico($cnpj)) {
             return "";
         }
         $partes[] = substr($cnpj, 0, 2);
@@ -59,7 +58,7 @@ class CNPJ
     }
 
     /**
-     * Verifica se o CNPJ está no formato: 00.000.000/0000-00
+     * Verifica se o CNPJ está no formato: XX.XXX.XXX/XXXX-99
      *
      * @param string $cnpj
      *
@@ -67,7 +66,9 @@ class CNPJ
      */
     public static function validarFormato($cnpj)
     {
-        return preg_match('!\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}!', (string)$cnpj) === 1;
+        $regex = '!^[A-Z0-9]{2}\.[A-Z0-9]{3}\.[A-Z0-9]{3}/[A-Z0-9]{4}-\d{2}$!';
+
+        return preg_match($regex, strtoupper((string)$cnpj)) === 1;
     }
 
     /**
@@ -80,98 +81,89 @@ class CNPJ
     public static function validar($cnpj)
     {
         $cnpj = static::digitos($cnpj);
-        // Remove caracteres não alfanuméricos (pontos, barras, traços)
-        $cnpj = strtoupper(preg_replace('/[^A-Z0-9]/', '', $cnpj));
-
-        // Verifica se tem 14 caracteres
-        if (strlen($cnpj) !== 14) {
+        if (!static::dvNumerico($cnpj)) {
             return false;
         }
-        // 3. Impede sequências idênticas conhecidas (ex: "00000000000000", "11111111111111", etc.)
         if (preg_match('/^([A-Z0-9])\1{13}$/', $cnpj)) {
             return false;
         }
+        $d1 = static::calcularDv(substr($cnpj, 0, 12), 5);
+        $d2 = static::calcularDv(substr($cnpj, 0, 13), 6);
 
-        // Valida 1º dígito verificador
-        $soma = 0;
-        $peso = 5;
-        for ($i = 0; $i < 12; $i++) {
-            $valor = static::converteCaractere($cnpj[$i]);
-            $soma += $valor * $peso;
-            $peso = ($peso == 2) ? 9 : $peso - 1;
-        }
-        $resto = $soma % 11;
-        $digito1 = ($resto < 2) ? 0 : 11 - $resto;
-
-        if ((int)$cnpj[12] !== $digito1) {
-            return false;
-        }
-
-        // Valida 2º dígito verificador
-        $soma = 0;
-        $peso = 6;
-        for ($i = 0; $i < 13; $i++) {
-            $valor = static::converteCaractere($cnpj[$i]);
-            $soma += $valor * $peso;
-            $peso = ($peso == 2) ? 9 : $peso - 1;
-        }
-        $resto = $soma % 11;
-        $digito2 = ($resto < 2) ? 0 : 11 - $resto;
-
-        return (int)$cnpj[13] === $digito2;
+        return (int)$cnpj[12] === $d1 && (int)$cnpj[13] === $d2;
     }
 
     /**
-     * Função auxiliar para converter caractere (número ou letra) em valor numérico
+     * Função auxiliar para converter caractere (número ou letra) em valor numérico.
+     * '0'-'9' => 0-9, 'A'-'Z' => 17-42
      *
      * @param string $char
+     *
      * @return int
      */
     public static function converteCaractere($char)
     {
-        $code = ord($char);
-        // Se for número ('0'-'9' -> ASCII 48-57), subtrai 48
-        // Se for letra ('A'-'Z' -> ASCII 65-90), subtrai 48 também (A = 65 - 48 = 17)
-        return $code - 48;
+        return ord($char) - 48;
     }
 
     /**
      * Função responsável por gerar um CNPJ válido.
+     *
+     * @param bool $alfanumerico
+     *
      * @return string
      */
-    public static function gerar()
+    public static function gerar($alfanumerico = false)
     {
-        $cnpj = [];
-        for ($i = 0; $i < 8; $i++) {
-            $cnpj[$i] = rand(0, 9);
+        if ($alfanumerico) {
+            $caracteres = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $base = '';
+            for ($i = 0; $i < 12; $i++) {
+                $base .= $caracteres[random_int(0, 35)];
+            }
+        } else {
+            $base = '';
+            for ($i = 0; $i < 8; $i++) {
+                $base .= random_int(0, 9);
+            }
+            $base .= '0001';
         }
-        $cnpj[8] = 0;
-        $cnpj[9] = 0;
-        $cnpj[10] = 0;
-        $cnpj[11] = 1;
-        // Primeiro dígito
-        $multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-        $soma = 0;
-        for ($i = 0; $i <= 11; $i++) {
-            $soma += $multiplicadores[$i] * $cnpj[$i];
-        }
-        $d1 = 11 - ($soma % 11);
-        if ($d1 >= 10) {
-            $d1 = 0;
-        }
-        $cnpj[12] = $d1;
-        // Segundo dígito
-        $multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-        $soma = 0;
-        for ($i = 0; $i <= 12; $i++) {
-            $soma += $multiplicadores[$i] * $cnpj[$i];
-        }
-        $d2 = 11 - ($soma % 11);
-        if ($d2 >= 10) {
-            $d2 = 0;
-        }
-        $cnpj[13] = $d2;
+        $base .= static::calcularDv($base, 5);
+        $base .= static::calcularDv($base, 6);
 
-        return static::formatar(implode("", $cnpj));
+        return static::formatar($base);
+    }
+
+    /**
+     * Verifica se o CNPJ tem 14 caracteres e os 2 dígitos verificadores são numéricos
+     *
+     * @param string $cnpj
+     *
+     * @return bool
+     */
+    protected static function dvNumerico($cnpj)
+    {
+        return strlen($cnpj) === 14 && ctype_digit(substr($cnpj, 12));
+    }
+
+    /**
+     * Calcula um dígito verificador (módulo 11) com pesos decrescentes de $pesoInicial até 2, reiniciando em 9
+     *
+     * @param string $base
+     * @param int $pesoInicial
+     *
+     * @return int
+     */
+    protected static function calcularDv($base, $pesoInicial)
+    {
+        $soma = 0;
+        $peso = $pesoInicial;
+        for ($i = 0, $len = strlen($base); $i < $len; $i++) {
+            $soma += static::converteCaractere($base[$i]) * $peso;
+            $peso = ($peso == 2) ? 9 : $peso - 1;
+        }
+        $resto = $soma % 11;
+
+        return ($resto < 2) ? 0 : 11 - $resto;
     }
 }

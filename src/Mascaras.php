@@ -37,7 +37,7 @@ class Mascaras
      */
     public static function formataCPFCNPJ($str)
     {
-        $str = CNPJ::digitos($str);
+        $str = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string)$str));
         $len = strlen($str);
         if (11 === $len) {
             $str = CPF::formatar($str);
