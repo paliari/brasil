@@ -27,7 +27,7 @@
     },
     "require": {
         "php": "^8.2",
-        "paliari/php-date-time": "^2.0"
+        "paliari/php-date-time": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5"

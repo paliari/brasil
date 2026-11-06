@@ -57,7 +57,7 @@ class DiaUtil
         $L = $i - $j;
         $mes = 3 + floor(($L + 40) / 44);
         $dia = $L + 28 - (31 * floor($mes / 4));
-        static::$pascoa = DateTimeBr::createFromDate($ano, $mes, $dia)->startOfDay();
+        static::$pascoa = DateTimeBr::createFromDate((int)$ano, (int)$mes, (int)$dia)->startOfDay();
 
         return static::$pascoa->copy();
     }
