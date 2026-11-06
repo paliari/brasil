@@ -18,7 +18,7 @@ alwaysApply: false
 ## CNPJ alfanumérico (Receita Federal, vigente a partir de jul/2026)
 
 - 14 posições: as 12 primeiras são `[A-Z0-9]`, as 2 últimas (DV) são **sempre numéricas**.
-- `digitos()` mantém letras e números e força maiúsculas.
+- `digitos()` mantém letras e números, força maiúsculas e corta em 14.
 - Valor de cada caractere no cálculo do DV: `ord($c) - 48` (`'0'`→0, `'9'`→9, `'A'`→17, `'Z'`→42).
 - Pesos módulo 11: DV1 usa `5,4,3,2,9,8,7,6,5,4,3,2`; DV2 usa `6,5,4,3,2,9,8,7,6,5,4,3,2`. Resto < 2 → DV 0, senão `11 - resto`.
 - CNPJs numéricos antigos continuam válidos — qualquer mudança precisa manter compatibilidade com eles.
@@ -26,9 +26,11 @@ alwaysApply: false
 
 Exemplos válidos para teste: `92.122.313/0001-30`, `00.000.000/0001-91`, `JB.54C.JHK/0001-01`, `6T.YW9.R14/0001-92`.
 
-## Pontos de atenção conhecidos
+## Contrato
 
-- `validarFormato()` ainda aceita apenas dígitos no regex; ao mexer, usar `[A-Z0-9]` nas 12 primeiras posições e `\d{2}` no DV.
-- `gerar()` produz só CNPJ numérico.
-- Como `digitos()` agora preserva letras, entradas com lixo alfabético (ex.: `"92122313teste0001530"`) deixam de ser limpas; alguns testes antigos em `CNPJTest`/`MascarasTest` assumem o comportamento antigo e precisam ser revistos junto com qualquer alteração.
-- `Mascaras::formataCPFCNPJ` decide pelo tamanho após `CNPJ::digitos()` (11 → CPF, 14 → CNPJ); senão devolve a string limpa.
+- `formatar()` devolve `""` e `validar()` devolve `false` se, após `digitos()`, não houver 14 caracteres ou o DV não for numérico (letras no lugar do DV nunca passam).
+- Letras são parte do CNPJ: entrada como `"92122313teste0001530"` não é mais "limpa" para números; vira `92122313TESTE0` e é inválida.
+- `validarFormato()` é ancorado (`^...$`) e aceita `[A-Z0-9]` nas 12 primeiras posições e `\d{2}` no DV.
+- `gerar()` gera numérico (filial `0001`); `gerar(true)` gera alfanumérico.
+- Cálculo do DV centralizado em `CNPJ::calcularDv($base, $pesoInicial)`; não duplicar o módulo 11.
+- `Mascaras::formataCPFCNPJ` limpa sem cortar (não usa `CNPJ::digitos()`) e decide pelo tamanho: 11 → CPF, 14 → CNPJ, senão devolve a string limpa em maiúsculas.

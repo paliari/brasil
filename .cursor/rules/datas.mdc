@@ -27,9 +27,11 @@ alwaysApply: false
 ## DiaUtil
 
 - Feriados nacionais fixos em `$feriados_nacionais` no formato `'mmdd'`.
-- Feriados móveis derivam de `dataPascoa()` (cache estático por ano em `$pascoa`).
+- Feriados móveis derivam de `dataPascoa()` (cache estático por ano em `$pascoa`, à meia-noite). `dataPascoa()` sempre devolve `->copy()`; nunca exponha o objeto em cache, pois `subDays`/`addDays` do Carbon mutam.
+- `createFromDate()` do Carbon preenche a hora atual: use `->startOfDay()` ao criar datas sem hora.
+- Comparar dias com `isSameDay()`, nunca `==` (que compara também a hora).
 - Feriados locais/de banco entram via `DiaUtil::setFeriadoHandler(callable)`; não codificar feriados municipais/estaduais na lib.
-- Cuidado: `diaUtil()`/`proxDiaUtil()`/`anteriorDiaUtil()` **mutam** o objeto recebido (`addDays`). Ao chamar, passe `->copy()` se o original precisar ser preservado.
+- `proxDiaUtil()`/`anteriorDiaUtil()` não alteram a data recebida: trabalham e devolvem uma cópia.
 - Entrada que não vira data lança `\DomainException`.
 
 ## Timezone
