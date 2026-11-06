@@ -168,7 +168,7 @@ class Mascaras
      */
     public static function formataMoeda($value, $clean = true)
     {
-        $value = (double)$value;
+        $value = (float)$value;
 
         return ($value || !$clean) ? number_format($value, 2, ',', '.') : '';
     }
@@ -183,7 +183,7 @@ class Mascaras
      */
     public static function formataNumero($value, $decimal = 2)
     {
-        $value = (double)$value;
+        $value = (float)$value;
 
         return $value ? number_format($value, $decimal, ',', '.') : '';
     }

@@ -35,7 +35,7 @@ class Acentos
     public static function convertTxt($txt)
     {
         if (static::is_utf8($txt)) {
-            $txt = utf8_decode($txt);
+            $txt = mb_convert_encoding($txt, 'ISO-8859-1', 'UTF-8');
         }
 
         return $txt;

@@ -37,9 +37,9 @@ class SemanaTest extends \PHPUnit\Framework\TestCase
      */
     protected static function removeAcento($str)
     {
-        $str = utf8_decode($str);
+        $str = mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8');
 
-        return strtr($str, utf8_decode('áéíóúãõâêÁÉÍÓÚÃÕÂÊ'), 'aeiouazaeAEIOUAZAE');
+        return strtr($str, mb_convert_encoding('áéíóúãõâêÁÉÍÓÚÃÕÂÊ', 'ISO-8859-1', 'UTF-8'), 'aeiouazaeAEIOUAZAE');
     }
 
     /**
