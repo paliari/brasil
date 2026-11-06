@@ -1,0 +1,37 @@
+---
+description: Regras para classes de data BR (DateTimeBr, DateBr, DateMesBr, DiaUtil, DataExtenso)
+globs: src/DateTime/**/*.php,tests/Date*Test.php,tests/DiaUtilTest.php,tests/DataExtensoTest.php
+alwaysApply: false
+---
+
+# Datas (src/DateTime)
+
+## Hierarquia
+
+`Carbon` → `Paliari\DateTime\TDateTime` (vendor) → `DateTimeBr` → `DateBr` / `DateMesBr`.
+
+- Use a API do Carbon/`TDateTime` (`addDays`, `subDays`, `intervalDays`, `createDate`, `createFromDate`) em vez de reimplementar cálculos com `mktime`.
+- Sobrescrever `prepareDate()` / `init()` (hooks do `TDateTime`) para adaptar entrada; não sobrescrever o construtor.
+
+## Formatos
+
+| Classe | Entrada BR aceita | `__toString()` |
+|---|---|---|
+| `DateTimeBr` | `d/m/Y`, `d/m/Y H:i:s`, `d/m/YTH:i:s` | `d/m/Y H:i:s` |
+| `DateBr` | idem | `d/m/Y` |
+| `DateMesBr` | idem (fixa dia 1 no `init`) | `m/Y` |
+
+- Também aceitam formato universal (`Y-m-d`) e timestamp (int ou string), via `parent::prepareDate`.
+- `toJSON()` retorna sempre `DATE_ATOM` — não mudar (já foi corrigido várias vezes no histórico).
+
+## DiaUtil
+
+- Feriados nacionais fixos em `$feriados_nacionais` no formato `'mmdd'`.
+- Feriados móveis derivam de `dataPascoa()` (cache estático por ano em `$pascoa`).
+- Feriados locais/de banco entram via `DiaUtil::setFeriadoHandler(callable)`; não codificar feriados municipais/estaduais na lib.
+- Cuidado: `diaUtil()`/`proxDiaUtil()`/`anteriorDiaUtil()` **mutam** o objeto recebido (`addDays`). Ao chamar, passe `->copy()` se o original precisar ser preservado.
+- Entrada que não vira data lança `\DomainException`.
+
+## Timezone
+
+Histórico de bugs com timezone em `DateBr`/`DateMesBr`: em testes, comparar por `format()` ou `timestamp` de datas literais, nunca contra `time()` do momento.

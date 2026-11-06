@@ -1,0 +1,45 @@
+---
+description: Convenções de testes PHPUnit em tests/
+globs: tests/**/*.php
+alwaysApply: false
+---
+
+# Testes (PHPUnit 8.5)
+
+- Um arquivo `tests/<Classe>Test.php` por classe de `src/`, sem namespace, estendendo `\PHPUnit\Framework\TestCase`.
+- Importar a classe testada com `use` no topo.
+- Métodos `public function testAlgumaCoisa()` com docblock curto em português descrevendo o cenário.
+- Compatível com PHPUnit 8: sem atributos `#[Test]`/`#[DataProvider]`; use anotações (`@group`, `@dataProvider`).
+- Testes que varrem anos de datas ou muitos valores levam `@group slow`.
+
+```php
+<?php
+
+use Paliari\Brasil\CPF;
+
+class CPFTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * Retorna vazio quando o CPF tem menos de 11 dígitos.
+     */
+    public function testFormatarInvalido()
+    {
+        $this->assertEquals("", CPF::formatar("123"));
+    }
+}
+```
+
+## O que cobrir
+
+- Caminho feliz com entrada formatada **e** só dígitos.
+- Entrada inválida (curta, longa, com lixo, vazia/`null`) conforme o contrato de retorno da classe.
+- Para validadores: casos válidos conhecidos, dígito errado, sequências repetidas e um loop validando `gerar()`.
+- Datas: não depender de `date()`/`time()` para resultado esperado; fixe datas literais (ex.: `new DateBr('2013-10-01')`).
+
+## Rodar
+
+```bash
+vendor/bin/phpunit --filter NomeDoTest
+```
+
+Antes de concluir uma mudança, rode a suíte completa e confirme que não surgiram falhas novas.

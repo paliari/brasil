@@ -1,0 +1,53 @@
+---
+description: Padrões de código PHP para as classes em src/
+globs: src/**/*.php
+alwaysApply: false
+---
+
+# Código em src/
+
+## Formato
+
+- PSR-12: 4 espaços, chave de classe/método na linha seguinte, `namespace Paliari\Brasil;` (ou `Paliari\Brasil\DateTime;`).
+- Sem `declare(strict_types=1)` e sem type hints nos parâmetros públicos existentes: a lib aceita entradas "sujas" (int, string formatada, null).
+- Arrays com sintaxe curta `[]` em código novo.
+- Sempre `static::` (não `self::`) para permitir sobrescrita em subclasses.
+
+## Classes utilitárias
+
+- Classes de domínio são coleções de métodos `public static`; não instanciar.
+- Constantes de domínio ficam em propriedades `public static $MAIUSCULAS` (ex.: `UF::$SIGLAS`, `Mes::$NOMES`), chaveadas e em ordem alfabética/numérica.
+- Converter entrada antes de usar funções de string: `(string)$valor` dentro de `preg_replace`, `str_pad` etc. (evita deprecations com `null` no PHP 8.1+).
+
+## Entrada inválida
+
+Seguir o contrato já existente de cada família de método — não lançar exceção onde hoje se retorna valor:
+
+| Método | Entrada inválida retorna |
+|---|---|
+| `formatar*` / `formata*` de documento | `""` |
+| `formataCEP`, `formataCOSIF` | `false` |
+| `validar*` | `false` |
+
+Exceções (`\DomainException`) só em `DateTime/` para tipos de data impossíveis de converter.
+
+## PHPDoc
+
+Todo método público com descrição em português, `@param` e `@return`; incluir exemplo do formato quando for máscara:
+
+```php
+/**
+ * Retorna o cpf formatado como: 999.999.999-99
+ *
+ * @param string $cpf
+ *
+ * @return string
+ */
+public static function formatar($cpf)
+```
+
+## Evitar
+
+- Supressão `@` em código novo (existe em legado; não propagar).
+- Comentários numerados de passo a passo ("// 1. ...", "// 3. ...") — o código deve se explicar.
+- Chamadas de rede fora de `BuscaCep`.

@@ -1,0 +1,45 @@
+---
+description: Visão geral da biblioteca paliari/brasil, estrutura, comandos e convenções de commit
+alwaysApply: true
+---
+
+# paliari/brasil
+
+Biblioteca PHP publicada no Packagist (`composer require paliari/brasil`) com utilidades
+brasileiras: CPF, CNPJ (incluindo alfanumérico), UF, máscaras, valor por extenso, datas BR e dias úteis.
+
+## Stack
+
+- PHP `^8.0` (não usar recursos de 8.1+ como enums, `readonly`, `never`, first-class callables).
+- Autoload PSR-4: `Paliari\Brasil\` → `src/`.
+- Dependência: `paliari/php-date-time` (`TDateTime`, que estende Carbon).
+- Testes: PHPUnit 8.5 (`require-dev`).
+
+## Estrutura
+
+- `src/*.php` — classes utilitárias estáticas (`CPF`, `CNPJ`, `Mascaras`, `UF`, `Mes`, `Semana`, `Acentos`, `ValorExtenso`, `BuscaCep`).
+- `src/DateTime/` — `DateTimeBr`, `DateBr`, `DateMesBr`, `DataExtenso`, `DiaUtil`.
+- `tests/` — um `<Classe>Test.php` por classe de `src/`.
+- `tmp/` — scripts descartáveis (ignorado no git); não referenciar em código.
+
+## Comandos
+
+```bash
+vendor/bin/phpunit                         # suíte completa
+vendor/bin/phpunit --filter CNPJTest       # uma classe
+vendor/bin/phpunit --exclude-group slow    # pula testes lentos de datas
+```
+
+Avisos `Deprecated` vindos de `vendor/` (PHPUnit 8 no PHP 8.4+) são ruído; olhe só o resumo `Tests/Failures`.
+
+## Regras gerais
+
+- Idioma: nomes de métodos, PHPDoc, mensagens e commits em **português**.
+- É uma lib pública: **não quebrar a API** (nomes/assinaturas de métodos públicos, propriedades estáticas públicas, formato de retorno). Mudança incompatível exige aviso explícito.
+- Ao adicionar função pública nova, atualizar a lista no `README.md`.
+- Todo comportamento novo ou corrigido precisa de teste em `tests/`.
+
+## Commits
+
+Conventional commits, minúsculo, curto, em português (como no histórico):
+`fix: corrige mascara cnpj alfanumerico`, `test: corrige testes`, `feat: adiciona ...`, `style: identar`.
