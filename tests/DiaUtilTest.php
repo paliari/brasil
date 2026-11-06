@@ -1,6 +1,7 @@
 <?php
 
 use Paliari\Brasil\DateTime\DiaUtil;
+use Paliari\Brasil\DateTime\DateBr;
 use Paliari\Brasil\DateTime\DateTimeBr;
 
 class DiaUtilTest extends \PHPUnit\Framework\TestCase
@@ -127,5 +128,50 @@ class DiaUtilTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(DiaUtil::isFeriado(new DateTimeBr('02/11/2013 00:00:00')));
         $this->assertTrue(DiaUtil::isFeriado(new DateTimeBr('15/11/2013 00:00:00')));
         $this->assertTrue(DiaUtil::isFeriado(new DateTimeBr('25/12/2013 00:00:00')));
+        $this->assertTrue(DiaUtil::isFeriado(new DateTimeBr('03/04/2015 00:00:00')));
+        $this->assertTrue(DiaUtil::isFeriado(new DateTimeBr('03/04/2015 10:30:00')));
+        $this->assertTrue(DiaUtil::isFeriado(new DateTimeBr('05/04/2015 00:00:00')));
+        $this->assertFalse(DiaUtil::isFeriado(new DateTimeBr('06/04/2015 00:00:00')));
+    }
+
+    /**
+     * Verifica que as datas derivadas da páscoa não alteram a páscoa em cache
+     */
+    public function testCachePascoa()
+    {
+        $date = new DateTimeBr('10/04/2015 00:00:00');
+        $this->assertEquals('05/04/2015', DiaUtil::dataPascoa($date)->format('d/m/Y'));
+        $this->assertEquals('03/04/2015', DiaUtil::dataPaixaoCristo($date)->format('d/m/Y'));
+        $this->assertEquals('05/04/2015', DiaUtil::dataPascoa($date)->format('d/m/Y'));
+        $this->assertEquals('04/06/2015', DiaUtil::dataCorpusChristi($date)->format('d/m/Y'));
+        $this->assertEquals('17/02/2015', DiaUtil::dataCarnaval($date)->format('d/m/Y'));
+        $this->assertEquals('05/04/2015', DiaUtil::dataPascoa($date)->format('d/m/Y'));
+    }
+
+    /**
+     * Verifica o próximo dia útil e o dia útil anterior
+     */
+    public function testProxAnteriorDiaUtil()
+    {
+        $this->assertEquals('06/04/2015', (string)DiaUtil::proxDiaUtil(new DateBr('2015-04-03')));
+        $this->assertEquals('02/01/2015', (string)DiaUtil::proxDiaUtil(new DateBr('2015-01-01')));
+        $this->assertEquals('10/04/2015', (string)DiaUtil::anteriorDiaUtil(new DateBr('2015-04-12')));
+        $this->assertEquals('08/04/2015', (string)DiaUtil::anteriorDiaUtil(new DateBr('2015-04-08')));
+    }
+
+    /**
+     * Verifica que a data passada não é alterada
+     */
+    public function testDiaUtilNaoAlteraEntrada()
+    {
+        $date = new DateBr('2015-04-04');
+        $prox = DiaUtil::proxDiaUtil($date);
+        $this->assertEquals('04/04/2015', (string)$date);
+        $this->assertEquals('06/04/2015', (string)$prox);
+        $this->assertNotSame($date, $prox);
+
+        $anterior = DiaUtil::anteriorDiaUtil($date);
+        $this->assertEquals('04/04/2015', (string)$date);
+        $this->assertEquals('02/04/2015', (string)$anterior);
     }
 }

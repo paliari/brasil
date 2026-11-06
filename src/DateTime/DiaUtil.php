@@ -31,7 +31,7 @@ class DiaUtil
     );
 
     /**
-     * Retorna um DateBr com o dia da páscoa do ano da data informada
+     * Retorna um DateTimeBr com o dia da páscoa do ano da data informada
      * @param  DateTimeBr           $date
      * @return DateTimeBr
      * @throws \DomainException
@@ -43,7 +43,7 @@ class DiaUtil
         $ano = @$date->year;
         if (static::$pascoa) {
             if ($ano == static::$pascoa->getYear()) {
-                return static::$pascoa;
+                return static::$pascoa->copy();
             }
         }
         $c = floor($ano / 100);
@@ -57,15 +57,15 @@ class DiaUtil
         $L = $i - $j;
         $mes = 3 + floor(($L + 40) / 44);
         $dia = $L + 28 - (31 * floor($mes / 4));
-        static::$pascoa = DateTimeBr::createFromDate($ano, $mes, $dia);
+        static::$pascoa = DateTimeBr::createFromDate($ano, $mes, $dia)->startOfDay();
 
-        return static::$pascoa;
+        return static::$pascoa->copy();
     }
 
     /**
-     * Retorna um DateBr com o dia da Paixão de Cristo do ano da data passada.
+     * Retorna um DateTimeBr com o dia da Paixão de Cristo do ano da data passada.
      * @param  DateTimeBr         $date
-     * @return DateBr
+     * @return DateTimeBr
      */
     public static function dataPaixaoCristo($date)
     {
@@ -73,9 +73,9 @@ class DiaUtil
     }
 
     /**
-     * Retorna um DateBr com o dia da Quarta-feira de Cinzas do ano da data passada.
+     * Retorna um DateTimeBr com o dia da Quarta-feira de Cinzas do ano da data passada.
      * @param $date
-     * @return DateBr
+     * @return DateTimeBr
      */
     public static function dataQuartaCinzas($date)
     {
@@ -83,9 +83,9 @@ class DiaUtil
     }
 
     /**
-     * Retorna um DateBr com o dia de Corpus Christi do ano da data passada.
+     * Retorna um DateTimeBr com o dia de Corpus Christi do ano da data passada.
      * @param $date
-     * @return DateBr
+     * @return DateTimeBr
      */
     public static function dataCorpusChristi($date)
     {
@@ -93,9 +93,9 @@ class DiaUtil
     }
 
     /**
-     * Retorna um DateBr com o dia do Domingo de Ramos do ano da data passada.
+     * Retorna um DateTimeBr com o dia do Domingo de Ramos do ano da data passada.
      * @param $date
-     * @return DataBr
+     * @return DateTimeBr
      */
     public static function dataDomingoRamos($date)
     {
@@ -103,9 +103,9 @@ class DiaUtil
     }
 
     /**
-     * Retorna um DateBr com o dia da terça-feira de carnaval do ano da data passada.
+     * Retorna um DateTimeBr com o dia da terça-feira de carnaval do ano da data passada.
      * @param $date
-     * @return DateBr
+     * @return DateTimeBr
      */
     public static function dataCarnaval($date)
     {
@@ -113,7 +113,8 @@ class DiaUtil
     }
 
     /**
-     * Retorna o póximo dia útil, se a data passsada for útil, retorna ela mesma.
+     * Retorna o próximo dia útil, se a data passada for útil, retorna uma cópia dela.
+     * A data passada não é alterada.
      * @param  DateTimeBr $datref
      * @return DateTimeBr
      */
@@ -123,7 +124,8 @@ class DiaUtil
     }
 
     /**
-     * Retorna o dia útil anterior, se a data passsada for útil, retorna ela mesma.
+     * Retorna o dia útil anterior, se a data passada for útil, retorna uma cópia dela.
+     * A data passada não é alterada.
      * @param  DateTimeBr $datref
      * @return DateTimeBr
      */
@@ -134,7 +136,7 @@ class DiaUtil
 
     /**
      * Retorna o dia útil de acordo com a data e o parâmetro passado.
-     * Se a data passsada for útil, retorna ela mesma.
+     * Se a data passada for útil, retorna uma cópia dela.
      *   1 - Próximo dia útil
      *  -1 - Anterior dia útil
      * @param  DateTimeBr           $datref
@@ -144,7 +146,7 @@ class DiaUtil
      */
     protected static function diaUtil($datref, $param)
     {
-        $datref = static::prepareDate($datref);
+        $datref = static::prepareDate($datref)->copy();
 
         while (static::isWeekend($datref) || static::isFeriado($datref)) {
             $datref->addDays($param);
@@ -187,7 +189,7 @@ class DiaUtil
      */
     protected static function isPascoa($datref)
     {
-        return $datref == static::dataPascoa($datref);
+        return $datref->isSameDay(static::dataPascoa($datref));
     }
 
     /**
@@ -197,7 +199,7 @@ class DiaUtil
      */
     protected static function isPaixao($datref)
     {
-        return $datref == static::dataPaixaoCristo($datref);
+        return $datref->isSameDay(static::dataPaixaoCristo($datref));
     }
 
     /**
@@ -217,7 +219,7 @@ class DiaUtil
      */
     protected static function isCorpusChristi($datref)
     {
-        return $datref == static::dataCorpusChristi($datref);
+        return $datref->isSameDay(static::dataCorpusChristi($datref));
     }
 
     /**
@@ -227,7 +229,7 @@ class DiaUtil
      */
     protected static function isQuartaCinzas($datref)
     {
-        return $datref == static::dataQuartaCinzas($datref);
+        return $datref->isSameDay(static::dataQuartaCinzas($datref));
     }
 
     /**
@@ -237,7 +239,7 @@ class DiaUtil
      */
     protected static function isCarnaval($datref)
     {
-        return $datref == static::dataCarnaval($datref);
+        return $datref->isSameDay(static::dataCarnaval($datref));
     }
 
     /**
